@@ -1,9 +1,34 @@
 import { View, Text, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRightIcon } from 'react-native-heroicons/outline';
 import RestaurantCard from './RestaurantCard';
+import client from '../sanity';
 
-export default function FeaturedRow({title, description}) {
+export default function FeaturedRow({id, title, description}) {
+    const [restaurants, setRestaurants] = useState([]);
+
+    useEffect(() => {
+        client.fetch(
+            `*[ _type == "featured" && _id == $id ] {
+                ...,
+                restaurants[] -> {
+                ...,
+                dishes[]->,
+                    type-> {
+                        name
+                    }
+                },
+            }[0]
+            `, 
+            { id }
+            )
+            .then((data) => {
+                setRestaurants(data?.restaurants);
+            });
+    }, [id]);
+      
+    // console.log(restaurants);
+
   return (
     <View>
         <View className="mt-4 flex-row items-center justify-between px-4">
@@ -21,48 +46,23 @@ export default function FeaturedRow({title, description}) {
             showsHorizontalScrollIndicator={false}
             className="pt-4"
         >
-
-            {/* Restaurant Card */}
-            <RestaurantCard 
-                id={123}
-                imgUrl="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1310&q=80"
-                title="Yo! Sushi"
-                rating={4.5}
-                genre="Japanese"
-                address="123 Main Street"
-                short_description="This is a Test Description"
-                dishes={[]}
-                long={20}
-                lat={20}
-            />
-
-            {/* Restaurant Card */}
-            <RestaurantCard 
-                id={123}
-                imgUrl="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1310&q=80"
-                title="Yo! Sushi"
-                rating={4.5}
-                genre="Japanese"
-                address="123 Main Street"
-                short_description="This is a Test Description"
-                dishes={[]}
-                long={20}
-                lat={20}
-            />
             
             {/* Restaurant Card */}
-            <RestaurantCard 
-                id={123}
-                imgUrl="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1310&q=80"
-                title="Yo! Sushi"
-                rating={4.5}
-                genre="Japanese"
-                address="123 Main Street"
-                short_description="This is a Test Description"
-                dishes={[]}
-                long={20}
-                lat={20}
-            />
+            {restaurants?.map((item) => (
+                <RestaurantCard 
+                    key={item._id}
+                    id={item._id}
+                    imgUrl={item.image}
+                    address={item.address}
+                    name={item.name}
+                    dishes={item.dishes}
+                    rating={item.rating}
+                    short_description={item.short_description}
+                    genre={item.type?.name}
+                    long={item.long}
+                    lat={item.lat}
+                />
+            ))}
 
         </ScrollView>
     </View>
