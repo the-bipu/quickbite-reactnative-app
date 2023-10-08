@@ -1,6 +1,6 @@
 import { View, Text, Image, TextInput, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { 
     UserIcon,
@@ -10,9 +10,12 @@ import {
  } from 'react-native-heroicons/outline';
 import Categories from '../Categories/Categories';
 import FeaturedRow from '../Categories/FeaturedRow';
+import client from '../sanity';
+
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const [featuredRestaurants, setFeaturedRestaurants] = useState([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -20,6 +23,28 @@ export default function HomeScreen() {
       headerShown: false,
     });
   }, []);
+
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const data = await client.fetch(`*[_type == "featured"] {
+          ...,
+          restaurants[] -> {
+            ...,
+            dishes[]->
+          }
+        }`);
+        setFeaturedRestaurants(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchRestaurants();
+  }, []);
+
+  
+  console.log(featuredRestaurants);
 
   return (
     <SafeAreaView className="bg-white pt-1">
@@ -72,26 +97,35 @@ export default function HomeScreen() {
           {/* Categories */}
           <Categories />
 
+          {featuredRestaurants?.map((item) => (
+            <FeaturedRow
+              key={item._id}
+              id={item._id}
+              title={item.name}
+              description={item.short_description}
+            />
+          ))}
+
           {/* Featured */}
-          <FeaturedRow
+          {/* <FeaturedRow
           id="123"
             title="Featured"
             description="Paid Placements for our partners"
-          />
+          /> */}
 
           {/* Tasty Discounts */}
-          <FeaturedRow
+          {/* <FeaturedRow
           id="124"
             title="Tasty Discounts"
             description="Paid Placements for our partners"
-          />
+          /> */}
 
           {/* Offers near you */}
-          <FeaturedRow
+          {/* <FeaturedRow
           id="125"
             title="Offers near you"
             description="Paid Placements for our partners"
-          />
+          /> */}
 
         </ScrollView>
 
