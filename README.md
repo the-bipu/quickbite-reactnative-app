@@ -1,5 +1,7 @@
 # QuickBite: React Native Food Delivery App
 
+![Screenshot](./assets/screenshots/ss-main.png)
+
 ## Table of Contents
 
 - [Description](#description)
@@ -15,19 +17,9 @@
 
 **QuickBite** is a React Native mobile application designed for food delivery. It serves as a clone of popular food delivery services, providing users with a convenient platform to order and receive their favorite meals. While the app is currently in its initial stage, it offers essential functionalities for browsing menus, placing orders, and tracking deliveries.
 
-### Home Screen
-![Screenshot](./assets/screenshots/home.jpg)
-
-### Menu Selection
-![Screenshot](./assets/screenshots/basket.jpg) 
-![Screenshot](./assets/screenshots/items-detail-1.jpg)
-![Screenshot](./assets/screenshots/items-detail-2.jpg)
-![Screenshot](./assets/screenshots/items-detail-3.jpg)
-![Screenshot](./assets/screenshots/items-detail-4.jpg)
-
-### Order Tracking
-![Screenshot](./assets/screenshots/waiting.jpg)
-![Screenshot](./assets/screenshots/order-page.jpg)
+## Screenshots Group
+![Screenshot](./assets/screenshots/first-ss.png) 
+![Screenshot](./assets/screenshots/second-ss.png) 
 
 ## Features
 
@@ -91,7 +83,6 @@ The project structure is organized as follows:
 
 ## Contributing
 We welcome contributions from the community to improve QuickBite. If you'd like to contribute, please follow these guidelines:
-
 
 - Fork the repository.
 - Create a new branch for your feature or bug fix.
